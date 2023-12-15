@@ -1,0 +1,25 @@
+{
+    "flashCards": [
+        {
+            "id": 1,
+            "questionTitle": "What is the capital of France?",
+            "questionAnswer": "Paris",
+            "questionOptions": [
+                "Tokyo",
+                "Brasilia",
+                "Berlin",
+                "Paris"
+            ],
+            "questionDate": "2023-12-13",
+            "questionStatus": "Want to Learn"
+        }
+    ],
+    "messages": [
+        {
+          "id": 1,
+          "messageSubject": "Sample Subject",
+          "messageEmail": "sample@gmail.com",
+          "messageContent": "Sample Message"
+        }
+    ]
+}
