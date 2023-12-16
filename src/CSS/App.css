@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f8f9fa;
-  background-image: linear-gradient(to right, #ffaa00, rgb(0, 255, 255));
+  background-image: linear-gradient(to right, #24C6DC, #514A9D);
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 17px;
 }
@@ -30,6 +30,7 @@ nav ul {
 }
 
 nav li {
+  margin-left: 25px;
   display: inline-block;
   margin-right: 20px;
 }
