@@ -1,29 +1,29 @@
 .home-cont {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  h1 {
-    font-size: 2.5em;
-    color: #343434;
-  }
-  
-  p {
-    font-size: 1.2em;
-    color: #343434;
-    margin-bottom: 20px;
-  }
-  
-  .list-of-projects {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .list-of-projects li {
-    margin: 10px;
-  }
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5em;
+  color: #343434;
+}
+
+p {
+  font-size: 1.2em;
+  color: #343434;
+  margin-bottom: 20px;
+}
+
+.list-of-projects {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.list-of-projects li {
+  margin: 10px;
+}

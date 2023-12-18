@@ -1,0 +1,65 @@
+.contact-me-cont {
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 15px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
+    background-image: linear-gradient(to right, #DAE2F8, #D6A4A4);
+}
+
+form {
+    display: grid;
+    gap: 10px;
+}
+
+label {
+    font-weight: bold;
+}
+
+h2{
+    text-align: center;
+}
+
+.messages-list-comp{
+    list-style: none;
+    margin-bottom: 15px;
+}
+
+.contact-me-cont input,
+.contact-me-cont textarea {
+    width: 97%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+}
+
+.contact-me-cont textarea{
+    height: 125px;
+}
+
+.contact-me-cont button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+button:hover {
+    transform: scale(1.02);
+    background-color: #0056b3;
+}
+
+.messages {
+    margin-top: 20px;
+}
+
+strong {
+    font-weight: bold;
+}
