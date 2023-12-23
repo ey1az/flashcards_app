@@ -47,6 +47,7 @@ const CreateCard = ({ onAddCard }) => {
 
       const addedCard = await response.json();
       onAddCard(addedCard);
+
     } catch (error) {
       console.error("Error adding flashcard:", error);
     }

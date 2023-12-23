@@ -25,13 +25,13 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
   const getSortingFunction = () => {
     switch (selectedSortOption) {
       case "ID":
-        return (a, b) => a.id - b.id;
+        return (f1, f2) => f1.id - f2.id;
       case "Question":
-        return (a, b) => a.questionTitle.localeCompare(b.questionTitle);
+        return (f1, f2) => f1.questionTitle.localeCompare(f2.questionTitle);
       case "Answer":
-        return (a, b) => a.questionAnswer.localeCompare(b.questionAnswer);
+        return (f1, f2) => f1.questionAnswer.localeCompare(f2.questionAnswer);
       default:
-        return (a, b) => new Date(b.questionDate) - new Date(a.questionDate);
+        return (f1, f2) => new Date(f2.questionDate) - new Date(f1.questionDate);
     }
   };
 
@@ -45,6 +45,24 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
       }
       return newSelected;
     });
+  };
+
+  const handleShareSelected = () => {
+    const selectedCardDetails = flashCards
+      .filter((card) => selectedCards.has(card.id))
+      .map(({ id, questionTitle, questionAnswer, questionOptions, questionDate, questionStatus }) => ({
+        id,
+        questionTitle,
+        questionAnswer,
+        questionOptions,
+        questionDate,
+        questionStatus
+      }));
+
+    const jsonData = JSON.stringify(selectedCardDetails, null, 2);
+    const mailtoLink = `mailto:?subject=Flashcards Details&body=${encodeURIComponent(jsonData)}`;
+    window.open(mailtoLink, '_blank');
+    setSelectedCards(new Set());
   };
 
   const filteredFlashCards = visibleFlashcards
@@ -95,6 +113,11 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
             <option value="Answer">Answer</option>
           </select>
         </label>
+      <div className="share-button">
+        {selectedCards.size > 0 && (
+          <button onClick={handleShareSelected}>Share Selected</button>
+        )}
+      </div>
       </div>
       <div className="card-cont">
         {filteredFlashCards.map((flashCard) => (
