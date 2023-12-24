@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Flashcards from "./Flashcards";
 import "./CSS/SearchFilterSortCard.css";
 
@@ -8,8 +8,10 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
   const [selectedSortOption, setSelectedSortOption] = useState("default");
   const [visibleFlashcards, setVisibleFlashcards] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loadMoreVisible, setLoadMoreVisible] = useState(true);
+  const [loadMore, setLoadMore] = useState(false);
+  const [noMoreFlashcards, setNoMoreFlashcards] = useState(false);
   const [selectedCards, setSelectedCards] = useState(new Set());
+  const [currentCard, setCurrentCard] = useState(null);
   const cardsPerPage = 9;
 
   const handleStatusChange = (e) => {
@@ -30,10 +32,67 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
         return (f1, f2) => f1.questionTitle.localeCompare(f2.questionTitle);
       case "Answer":
         return (f1, f2) => f1.questionAnswer.localeCompare(f2.questionAnswer);
-      default:
+      case "Date":
         return (f1, f2) => new Date(f2.questionDate) - new Date(f1.questionDate);
+      default:
+        return (f1, f2) => {
+          if (f1.questionOrder > f2.questionOrder) {
+            return 1;
+          } else {
+            return -1;
+          }
+        };
     }
   };
+
+  const handleLoadMore = useCallback(async () => {
+    try {
+      setSearchText("");
+      setSelectedStatus("all");
+
+      setLoadMore(true);
+
+      const response = await fetch(
+        `http://localhost:3001/flashCards?_page=${currentPage + 1}&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to load more flashcards. Server responded with ${response.status}`);
+      }
+
+      const newFlashcards = await response.json();
+
+      if (newFlashcards.length > 0) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        setVisibleFlashcards((prevVisible) => [...prevVisible, ...newFlashcards]);
+        setCurrentPage((prevPage) => prevPage + 1);
+      } else {
+        setNoMoreFlashcards(true);
+      }
+    } catch (error) {
+      console.error("Error loading more flashcards:", error);
+    }
+    finally {
+      setLoadMore(false);
+    }
+  }, [currentPage, cardsPerPage]);
+
+  const handleScroll = useCallback(() => {
+    const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+
+    if (!loadMore && !noMoreFlashcards && scrollHeight - scrollTop <= clientHeight + 1) {
+      handleLoadMore();
+    }
+  }, [handleLoadMore, loadMore, noMoreFlashcards]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]);
 
   const handleCardSelect = (cardId) => {
     setSelectedCards((prevSelected) => {
@@ -65,6 +124,27 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
     setSelectedCards(new Set());
   };
 
+  useEffect(() => {
+    const fetchInitialFlashcards = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/flashCards?_page=1&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
+        );
+  
+        if (!response.ok) {
+          throw new Error(`Failed to fetch initial flashcards. Server responded with ${response.status}`);
+        }
+  
+        const initialFlashcards = await response.json();
+        setVisibleFlashcards(initialFlashcards);
+      } catch (error) {
+        console.error("Error fetching initial flashcards:", error);
+      }
+    };
+  
+    fetchInitialFlashcards();
+  }, [cardsPerPage]);
+  
   const filteredFlashCards = visibleFlashcards
     .filter((flashCard) => {
       const searchString = searchText.toLowerCase();
