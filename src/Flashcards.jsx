@@ -33,7 +33,7 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const response = await fetch(`http://localhost:3001/flashCards/${flashCard.id}`, {
+      const response = await fetch(`http://localhost:3002/flashCards/${flashCard.id}`, {
         method: 'DELETE',
       });
 
@@ -44,7 +44,9 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
       onDelete(flashCard.id);
       
     } catch (error) {
-      console.error('Error deleting flashcard:', error);
+      if (!(error instanceof TypeError)) {
+        console.error('Error deleting flashcard:', error);
+      }
     }
   };
 
@@ -62,7 +64,14 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
 
     const initialQuestionTitle = flashCard.questionTitle;
     const initialQuestionAnswer = flashCard.questionAnswer;
-  
+
+    if (
+      editedQuestionTitle === initialQuestionTitle &&
+      editedQuestionAnswer === initialQuestionAnswer
+    ) {
+      return alert("Please apply some changes to the Question or the Answer.");
+    }
+
     if (!flashCard.questionOptions.includes(editedQuestionAnswer)) {
       alert("Updated answer must be one of the current options!");
       setEditedQuestionTitle(initialQuestionTitle);
@@ -81,7 +90,7 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
     });
 
     try {
-      const response = await fetch(`http://localhost:3001/flashCards/${flashCard.id}`, {
+      const response = await fetch(`http://localhost:3002/flashCards/${flashCard.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -100,8 +109,15 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
 
       onEdit(flashCard.id, editedQuestionTitle, editedQuestionAnswer);
     } catch (error) {
-      console.error('Error editing flashcard:', error);
+      if (!(error instanceof TypeError)) {
+        console.error('Error editing flashcard:', error);
+      }
     }
+  };
+
+  const handleGoBack = () => {
+    setEditMode(false);
+    setTurn(!turn);
   };
 
   const handleMarkAsNoted = async (e) => {
@@ -110,7 +126,7 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
     
     try {
       const newStatus = status === "Want to Learn" ? "Noted" : "Learned";
-      const response = await fetch(`http://localhost:3001/flashCards/${flashCard.id}`, {
+      const response = await fetch(`http://localhost:3002/flashCards/${flashCard.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +144,9 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
       setButtonText(newStatus === "Noted" ? "Mark as Learned" : "Mark as Noted");
       setMarkedAsLearned(newStatus === "Learned");
     } catch (error) {
-      console.error('Error updating flashcard status:', error);
+      if (!(error instanceof TypeError)) {
+        console.error('Error updating flashcard status:', error);
+      }
     }
   };
 
@@ -163,6 +181,7 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
           handleTitleChange={(e) => setEditedQuestionTitle(e.target.value)}
           handleAnswerChange={(e) => setEditedQuestionAnswer(e.target.value)}
           handleUpdateClick={handleUpdateClick}
+          handleGoBack={handleGoBack}
         />
       ) : (
         <DisplayView
@@ -190,23 +209,31 @@ const EditView = ({
   handleTitleChange,
   handleAnswerChange,
   handleUpdateClick,
+  handleGoBack,
 }) => (
   <>
     <input
-      className = "updateTitle"
+      className="updateTitle"
       type="text"
       value={editedQuestionTitle}
       onChange={handleTitleChange}
       onClick={(e) => e.stopPropagation()}
     />
     <input
-      className= "updateAnswer"
+      className="updateAnswer"
       type="text"
       value={editedQuestionAnswer}
       onChange={handleAnswerChange}
       onClick={(e) => e.stopPropagation()}
     />
-    <button className="updateBtnEditMode" onClick={handleUpdateClick}>Update</button>
+    <div className="edit-buttons">
+      <button className="updateBtnEditMode" onClick={handleUpdateClick}>
+        Update
+      </button>
+      <button className="goBackBtnEditMode" onClick={handleGoBack}>
+        Go Back
+      </button>
+    </div>
   </>
 );
 
@@ -241,10 +268,12 @@ const DisplayView = ({
       )}
       {turn && (
         <div className={`flashcard-act ${turn ? "flipped" : ""}`}>
+        {status !== "Learned" && (  
           <button className="noted-button" onClick={handleMarkAsNoted}>
             {buttonText}
           </button>
-        </div>
+        )}
+      </div>
       )}
     </div>
     {height === "auto" && (

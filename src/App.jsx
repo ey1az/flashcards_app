@@ -21,6 +21,7 @@ const App = () => {
             questionOptions: question.questionOptions,
             questionDate: question.questionDate,
             questionStatus: question.questionStatus,
+            questionOrder: question.questionOrder
           };
         });
         setFlashCards(updatedFlashCards);

@@ -20,7 +20,9 @@ function ContactMe() {
       const data = await response.json();
       setMessages(data);
     } catch (error) {
-      console.error("Error fetching messages:", error);
+      if (!(error instanceof TypeError)) {
+        console.error("Error fetching messages:", error);
+      }
     }
   };
 
@@ -50,7 +52,9 @@ function ContactMe() {
 
       fetchMessages();
     } catch (error) {
-      console.error("Error submitting message:", error);
+      if (!(error instanceof TypeError)) {
+        console.error("Error submitting message:", error);
+      }
     }
   };
 
