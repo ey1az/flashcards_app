@@ -1,23 +1,15 @@
 import React from 'react';
-import Flashcards from './Flashcards';
 import CreateCard from "./CreateCard";
+import SearchFilterSortCard from "./SearchFilterSortCard";
 
 const FlashcardList = ({ flashCards, onDelete, onEdit, onAddCard}) => (
   <>
-      <div>
+    <div>
       <CreateCard onAddCard={onAddCard} />
-      </div>
-      <div className="card-cont">
-      {flashCards
-        .map((flashCard) => (
-          <Flashcards
-            key={flashCard.id}
-            flashCard={flashCard}
-            onDelete={onDelete}
-            onEdit={onEdit}
-          />
-        ))}
-      </div>
+    </div>
+    <div>
+      <SearchFilterSortCard flashCards={flashCards} onDelete={onDelete} onEdit={onEdit}/>
+    </div>
   </>
 );
 

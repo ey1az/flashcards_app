@@ -13,7 +13,7 @@ function ContactMe() {
 
   const fetchMessages = async () => {
     try {
-      const response = await fetch("http://localhost:3001/messages");
+      const response = await fetch("http://localhost:3002/messages");
       if (!response.ok) {
         throw new Error(`Failed to fetch messages. Server responded with ${response.status}`);
       }
@@ -28,7 +28,7 @@ function ContactMe() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3001/messages", {
+      const response = await fetch("http://localhost:3002/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
