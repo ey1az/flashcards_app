@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Flashcards from "./Flashcards";
 import "./CSS/SearchFilterSortCard.css";
 
@@ -13,6 +13,8 @@ const SearchFilterSortCard = ({ flashCards }) => {
   const [selectedCards, setSelectedCards] = useState(new Set());
   const [currentCard, setCurrentCard] = useState(null);
   const cardsPerPage = 9;
+
+  const statusSelectRef = useRef(null);
 
   const handleStatusChange = (e) => {
     const status = e.target.value;
@@ -51,6 +53,8 @@ const SearchFilterSortCard = ({ flashCards }) => {
       setSelectedStatus("all");
 
       setLoadMore(true);
+      
+      statusSelectRef.current.value = "all";
 
       const response = await fetch(
         `http://localhost:3002/flashCards?_page=${currentPage + 1}&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
@@ -164,19 +168,19 @@ const SearchFilterSortCard = ({ flashCards }) => {
     })
     .sort(getSortingFunction());
 
-  const updateFlashcardsDnD = async (draggedCard, targetCard) => {
+  const updateFlashcardsDnD = async (currentCard, targetCard) => {
     try {
-      if (!draggedCard || !targetCard) {
+      if (!currentCard || !targetCard) {
         console.error('Error: Invalid dragged or target card');
         return;
       }
 
-      if (draggedCard.questionOrder === undefined || targetCard.questionOrder === undefined) {
+      if (currentCard.questionOrder === undefined || targetCard.questionOrder === undefined) {
         console.error('Error: Missing questionOrder property in dragged or target card');
         return;
       }
 
-      const updateDraggedCardResponse = await fetch(`http://localhost:3002/flashCards/${draggedCard.id}`, {
+      const updateCurrentCardResponse = await fetch(`http://localhost:3002/flashCards/${currentCard.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -184,9 +188,9 @@ const SearchFilterSortCard = ({ flashCards }) => {
         body: JSON.stringify({ questionOrder: targetCard.questionOrder }),
       });
 
-      if (!updateDraggedCardResponse.ok) {
-        const errorText = await updateDraggedCardResponse.text();
-        throw new Error(`Failed to update dragged card. Server responded with ${updateDraggedCardResponse.status}: ${errorText}`);
+      if (!updateCurrentCardResponse.ok) {
+        const errorText = await updateCurrentCardResponse.text();
+        throw new Error(`Failed to update dragged card. Server responded with ${updateCurrentCardResponse.status}: ${errorText}`);
       }
 
       const updateTargetCardResponse = await fetch(`http://localhost:3002/flashCards/${targetCard.id}`, {
@@ -194,7 +198,7 @@ const SearchFilterSortCard = ({ flashCards }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ questionOrder: draggedCard.questionOrder }),
+        body: JSON.stringify({ questionOrder: currentCard.questionOrder }),
       });
 
       if (!updateTargetCardResponse.ok) {
@@ -202,11 +206,13 @@ const SearchFilterSortCard = ({ flashCards }) => {
         throw new Error(`Failed to update target card. Server responded with ${updateTargetCardResponse.status}: ${errorText}`);
       }
     } catch (error) {
+      if (!(error instanceof TypeError)) {
       console.error('Error updating flashcards:', error.message);
+      }
     }
   };
 
-  function dragStartHandler(_, flashCard) {
+  function dragStartHandler(flashCard) {
     setCurrentCard(flashCard);
   }
 
@@ -240,18 +246,10 @@ const SearchFilterSortCard = ({ flashCards }) => {
 
   return (
     <div>
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search flashcards..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
-      </div>
       <div className="filter-opt">
         <label className="filter-opt-select">
           Filter by Status:
-          <select onChange={handleStatusChange}>
+          <select ref={statusSelectRef} onChange={handleStatusChange}>
             <option value="all">All</option>
             <option value="Want to Learn">Want to Learn</option>
             <option value="Noted">Noted</option>
@@ -269,16 +267,27 @@ const SearchFilterSortCard = ({ flashCards }) => {
           </select>
         </label>
       </div>
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search flashcards..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+      </div>
       <div className="share-button">
         {selectedCards.size > 0 && (
           <button onClick={handleShareSelected}>Share Selected</button>
         )}
       </div>
+      <div className="flashListText">
+        <p>List of Flashcards</p>
+      </div>
       <div className="card-cont">
         {filteredFlashCards.map((flashCard) => (
           <div
             draggable={true}
-            onDragStart={(e) => dragStartHandler(e, flashCard)}
+            onDragStart={() => dragStartHandler(flashCard)}
             onDragOver={(e) => dragOverHandler(e)}
             onDrop={(e) => dropHandler(e, flashCard)}
             key={flashCard.id} className="flashcard-item">
