@@ -20,15 +20,11 @@ function ContactMe() {
       const data = await response.json();
       setMessages(data);
     } catch (error) {
-      if (!(error instanceof TypeError)) {
-        console.error("Error fetching messages:", error);
-      }
+      console.error("Error fetching messages:", error);
     }
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
     try {
       const response = await fetch("http://localhost:3002/messages", {
         method: "POST",
@@ -49,12 +45,8 @@ function ContactMe() {
       setSubject("");
       setEmail("");
       setContent("");
-
-      fetchMessages();
     } catch (error) {
-      if (!(error instanceof TypeError)) {
-        console.error("Error submitting message:", error);
-      }
+      console.error("Error submitting message:", error);
     }
   };
 

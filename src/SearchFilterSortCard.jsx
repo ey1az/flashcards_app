@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Flashcards from "./Flashcards";
 import "./CSS/SearchFilterSortCard.css";
 
-const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
+const SearchFilterSortCard = ({ flashCards }) => {
   const [searchText, setSearchText] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedSortOption, setSelectedSortOption] = useState("default");
@@ -53,7 +53,7 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
       setLoadMore(true);
 
       const response = await fetch(
-        `http://localhost:3001/flashCards?_page=${currentPage + 1}&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
+        `http://localhost:3002/flashCards?_page=${currentPage + 1}&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
       );
 
       if (!response.ok) {
@@ -128,23 +128,23 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
     const fetchInitialFlashcards = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/flashCards?_page=1&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
+          `http://localhost:3002/flashCards?_page=1&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
         );
-  
+
         if (!response.ok) {
           throw new Error(`Failed to fetch initial flashcards. Server responded with ${response.status}`);
         }
-  
+
         const initialFlashcards = await response.json();
         setVisibleFlashcards(initialFlashcards);
       } catch (error) {
         console.error("Error fetching initial flashcards:", error);
       }
     };
-  
+
     fetchInitialFlashcards();
   }, [cardsPerPage]);
-  
+
   const filteredFlashCards = visibleFlashcards
     .filter((flashCard) => {
       const searchString = searchText.toLowerCase();
@@ -163,6 +163,80 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
       }
     })
     .sort(getSortingFunction());
+
+  const updateFlashcardsDnD = async (draggedCard, targetCard) => {
+    try {
+      if (!draggedCard || !targetCard) {
+        console.error('Error: Invalid dragged or target card');
+        return;
+      }
+
+      if (draggedCard.questionOrder === undefined || targetCard.questionOrder === undefined) {
+        console.error('Error: Missing questionOrder property in dragged or target card');
+        return;
+      }
+
+      const updateDraggedCardResponse = await fetch(`http://localhost:3002/flashCards/${draggedCard.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ questionOrder: targetCard.questionOrder }),
+      });
+
+      if (!updateDraggedCardResponse.ok) {
+        const errorText = await updateDraggedCardResponse.text();
+        throw new Error(`Failed to update dragged card. Server responded with ${updateDraggedCardResponse.status}: ${errorText}`);
+      }
+
+      const updateTargetCardResponse = await fetch(`http://localhost:3002/flashCards/${targetCard.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ questionOrder: draggedCard.questionOrder }),
+      });
+
+      if (!updateTargetCardResponse.ok) {
+        const errorText = await updateTargetCardResponse.text();
+        throw new Error(`Failed to update target card. Server responded with ${updateTargetCardResponse.status}: ${errorText}`);
+      }
+    } catch (error) {
+      console.error('Error updating flashcards:', error.message);
+    }
+  };
+
+  function dragStartHandler(_, flashCard) {
+    setCurrentCard(flashCard);
+  }
+
+  function dragOverHandler(e) {
+    e.preventDefault();
+  }
+
+  function dropHandler(e, targetCard) {
+    e.preventDefault();
+
+    if (!currentCard || !targetCard || currentCard.id === targetCard.id) {
+      setCurrentCard(null);
+      return;
+    }
+
+    const updatedFlashcards = filteredFlashCards.map((c) => {
+      if (c.id === targetCard.id) {
+        return { ...c, questionOrder: currentCard.questionOrder };
+      }
+      if (c.id === currentCard.id) {
+        return { ...c, questionOrder: targetCard.questionOrder };
+      }
+      return c;
+    });
+
+    updateFlashcardsDnD(currentCard, targetCard);
+
+    setVisibleFlashcards(updatedFlashcards);
+    setCurrentCard(null);
+  }
 
   return (
     <div>
@@ -187,29 +261,44 @@ const SearchFilterSortCard = ({ flashCards, onDelete, onEdit }) => {
         <label>
           Sort by:
           <select onChange={handleSortChange}>
-            <option value="default">Date</option>
+            <option value="default">Personal Order</option>
+            <option value="Date">Date</option>
             <option value="ID">ID</option>
             <option value="Question">Question</option>
             <option value="Answer">Answer</option>
           </select>
         </label>
+      </div>
       <div className="share-button">
         {selectedCards.size > 0 && (
           <button onClick={handleShareSelected}>Share Selected</button>
         )}
       </div>
-      </div>
       <div className="card-cont">
         {filteredFlashCards.map((flashCard) => (
-          <div key={flashCard.id} className="flashcard-item">
+          <div
+            draggable={true}
+            onDragStart={(e) => dragStartHandler(e, flashCard)}
+            onDragOver={(e) => dragOverHandler(e)}
+            onDrop={(e) => dropHandler(e, flashCard)}
+            key={flashCard.id} className="flashcard-item">
+            <input
+              type="checkbox"
+              className="flashcard-checkbox"
+              checked={selectedCards.has(flashCard.id)}
+              onChange={() => handleCardSelect(flashCard.id)}
+            />
             <Flashcards
               flashCard={flashCard}
-              onDelete={onDelete}
-              onEdit={onEdit}
             />
           </div>
         ))}
       </div>
+      {loadMore && !noMoreFlashcards && (
+        <div>
+          <p className="loading-text"> Flashcards are loading... </p>
+        </div>
+      )}
     </div>
   );
 };

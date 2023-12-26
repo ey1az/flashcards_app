@@ -2,13 +2,13 @@ import React from 'react';
 import CreateCard from "./CreateCard";
 import SearchFilterSortCard from "./SearchFilterSortCard";
 
-const FlashcardList = ({ flashCards, onDelete, onEdit, onAddCard}) => (
+const FlashcardList = ({ flashCards }) => (
   <>
     <div>
-      <CreateCard onAddCard={onAddCard} />
+      <CreateCard />
     </div>
     <div>
-      <SearchFilterSortCard flashCards={flashCards} onDelete={onDelete} onEdit={onEdit}/>
+      <SearchFilterSortCard flashCards={flashCards} />
     </div>
   </>
 );

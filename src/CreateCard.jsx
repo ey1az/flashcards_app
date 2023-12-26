@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./CSS/CreateCard.css";
 
-const CreateCard = ({ onAddCard }) => {
+const CreateCard = () => {
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionOptions, setQuestionOptions] = useState(["", "", "", ""]);
   const [questionAnswer, setQuestionAnswer] = useState("");
@@ -18,22 +18,34 @@ const CreateCard = ({ onAddCard }) => {
   const handleAddCard = async () => {
 
     if (!questionOptions.includes(questionAnswer)) {
-        alert("Please make sure that one of the options is equal to the answer.");
-        return;
+      alert("Please make sure that one of the options is equal to the answer.");
+      return;
     }
 
     const { questionDate } = getCurrentDateTime();
 
-    const newCard = {
-      questionTitle,
-      questionOptions,
-      questionAnswer,
-      questionDate,
-      questionStatus: "Want to Learn",
-    };
-
     try {
-      const response = await fetch("http://localhost:3001/flashCards", {
+      const response = await fetch("http://localhost:3002/flashCards");
+      if (!response.ok) {
+        throw new Error(`Failed to fetch flashcards. Server responded with ${response.status}`);
+      }
+
+      const flashCards = await response.json();
+
+      const maxQuestionOrder = flashCards.reduce((maxOrder, card) => {
+        return Math.max(maxOrder, card.questionOrder || 0);
+      }, 0);
+
+      const newCard = {
+        questionTitle,
+        questionOptions,
+        questionAnswer,
+        questionDate,
+        questionStatus: "Want to Learn",
+        questionOrder: maxQuestionOrder + 1,
+      };
+
+      const addNewCardResponse = await fetch("http://localhost:3002/flashCards", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,12 +53,9 @@ const CreateCard = ({ onAddCard }) => {
         body: JSON.stringify(newCard),
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to add flashcard. Server responded with ${response.status}`);
+      if (!addNewCardResponse.ok) {
+        throw new Error(`Failed to add flashcard. Server responded with ${addNewCardResponse.status}`);
       }
-
-      const addedCard = await response.json();
-      onAddCard(addedCard);
 
     } catch (error) {
       console.error("Error adding flashcard:", error);
@@ -55,7 +64,7 @@ const CreateCard = ({ onAddCard }) => {
     setQuestionTitle("");
     setQuestionOptions(["", "", "", ""]);
     setQuestionAnswer("");
-    setShowForm(false); 
+    setShowForm(false);
   };
 
   return (

@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./CSS/Flashcard.css";
 
-const FlashCards = ({ flashCard, onDelete, onEdit}) => {
+const FlashCards = ({ flashCard }) => {
   const [turn, setTurn] = useState(false);
   const [height, setHeight] = useState("initial");
   const [status, setStatus] = useState(flashCard.questionStatus || "Want to Learn");
   const [editMode, setEditMode] = useState(false);
   const [editedQuestionTitle, setEditedQuestionTitle] = useState(flashCard.questionTitle);
   const [editedQuestionAnswer, setEditedQuestionAnswer] = useState(flashCard.questionAnswer);
-  const [setMarkedAsLearned] = useState(flashCard.questionStatus === "Learned");
   const [buttonText, setButtonText] = useState(status === "Want to Learn" ? "Mark as Noted" : "Mark as Learned");
 
   const questionTitleEl = useRef();
@@ -41,12 +40,8 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
         throw new Error(`Failed to delete flashcard. Server responded with ${response.status}`);
       }
 
-      onDelete(flashCard.id);
-      
     } catch (error) {
-      if (!(error instanceof TypeError)) {
-        console.error('Error deleting flashcard:', error);
-      }
+      console.error('Error deleting flashcard:', error);
     }
   };
 
@@ -107,11 +102,8 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
         throw new Error(`Failed to edit flashcard. Server responded with ${response.status}`);
       }
 
-      onEdit(flashCard.id, editedQuestionTitle, editedQuestionAnswer);
     } catch (error) {
-      if (!(error instanceof TypeError)) {
-        console.error('Error editing flashcard:', error);
-      }
+      console.error('Error editing flashcard:', error);
     }
   };
 
@@ -123,7 +115,7 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
   const handleMarkAsNoted = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     try {
       const newStatus = status === "Want to Learn" ? "Noted" : "Learned";
       const response = await fetch(`http://localhost:3002/flashCards/${flashCard.id}`, {
@@ -142,11 +134,8 @@ const FlashCards = ({ flashCard, onDelete, onEdit}) => {
 
       setStatus(newStatus);
       setButtonText(newStatus === "Noted" ? "Mark as Learned" : "Mark as Noted");
-      setMarkedAsLearned(newStatus === "Learned");
     } catch (error) {
-      if (!(error instanceof TypeError)) {
-        console.error('Error updating flashcard status:', error);
-      }
+      console.error('Error updating flashcard status:', error);
     }
   };
 
@@ -268,12 +257,12 @@ const DisplayView = ({
       )}
       {turn && (
         <div className={`flashcard-act ${turn ? "flipped" : ""}`}>
-        {status !== "Learned" && (  
-          <button className="noted-button" onClick={handleMarkAsNoted}>
-            {buttonText}
-          </button>
-        )}
-      </div>
+          {status !== "Learned" && (
+            <button className="noted-button" onClick={handleMarkAsNoted}>
+              {buttonText}
+            </button>
+          )}
+        </div>
       )}
     </div>
     {height === "auto" && (
