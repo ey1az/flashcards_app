@@ -2,13 +2,13 @@ import React from 'react';
 import CreateCard from "./CreateCard";
 import SearchFilterSortCard from "./SearchFilterSortCard";
 
-const FlashcardList = ({ flashCards }) => (
+const FlashcardList = () => (
   <>
     <div>
       <CreateCard />
     </div>
     <div>
-      <SearchFilterSortCard flashCards={flashCards} />
+      <SearchFilterSortCard />
     </div>
   </>
 );

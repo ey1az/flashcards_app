@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import HomePage from "./HomePage";
 import FlashcardList from "./FlashcardList";
@@ -6,31 +6,7 @@ import ContactMe from "./ContactMe";
 
 import "./CSS/App.css";
 
-const App = () => {
-  const [flashCards, setFlashCards] = useState([]);
-
-  useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/data/flashcardData.json`)
-      .then((response) => response.json())
-      .then((data) => {
-        const updatedFlashCards = data.flashCards.map((question) => {
-          return {
-            id: question.id,
-            questionTitle: question.questionTitle,
-            questionAnswer: question.questionAnswer,
-            questionOptions: question.questionOptions,
-            questionDate: question.questionDate,
-            questionStatus: question.questionStatus,
-            questionOrder: question.questionOrder
-          };
-        });
-        setFlashCards(updatedFlashCards);
-      })
-      .catch((error) => {
-        console.error("Error fetching flashcards:", error);
-      });
-  }, []);
-
+const App = ({ flashCards }) => {
   return (
     <Router>
       <div className="App">
@@ -53,7 +29,7 @@ const App = () => {
           <Route path="/home-page" element={<HomePage />} />
           <Route
             path="/flashcards-page"
-            element={<FlashcardList flashCards={flashCards}/>}
+            element={<FlashcardList flashCards={flashCards} />}
           />
           <Route path="/contact-me-page" element={<ContactMe />} />
         </Routes>

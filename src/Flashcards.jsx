@@ -9,6 +9,8 @@ const FlashCards = ({ flashCard }) => {
   const [editedQuestionTitle, setEditedQuestionTitle] = useState(flashCard.questionTitle);
   const [editedQuestionAnswer, setEditedQuestionAnswer] = useState(flashCard.questionAnswer);
   const [buttonText, setButtonText] = useState(status === "Want to Learn" ? "Mark as Noted" : "Mark as Learned");
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [showDeletedMessage, setShowDeletedMessage] = useState(false);
 
   const questionTitleEl = useRef();
   const questionAnswerEl = useRef();
@@ -40,6 +42,9 @@ const FlashCards = ({ flashCard }) => {
         throw new Error(`Failed to delete flashcard. Server responded with ${response.status}`);
       }
 
+      setIsDeleted(true);
+      setShowDeletedMessage(true);
+
     } catch (error) {
       console.error('Error deleting flashcard:', error);
     }
@@ -59,13 +64,6 @@ const FlashCards = ({ flashCard }) => {
 
     const initialQuestionTitle = flashCard.questionTitle;
     const initialQuestionAnswer = flashCard.questionAnswer;
-
-    if (
-      editedQuestionTitle === initialQuestionTitle &&
-      editedQuestionAnswer === initialQuestionAnswer
-    ) {
-      return alert("Please apply some changes to the Question or the Answer.");
-    }
 
     if (!flashCard.questionOptions.includes(editedQuestionAnswer)) {
       alert("Updated answer must be one of the current options!");
@@ -163,31 +161,34 @@ const FlashCards = ({ flashCard }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {editMode ? (
-        <EditView
-          editedQuestionTitle={editedQuestionTitle}
-          editedQuestionAnswer={editedQuestionAnswer}
-          handleTitleChange={(e) => setEditedQuestionTitle(e.target.value)}
-          handleAnswerChange={(e) => setEditedQuestionAnswer(e.target.value)}
-          handleUpdateClick={handleUpdateClick}
-          handleGoBack={handleGoBack}
-        />
-      ) : (
-        <DisplayView
-          questionTitle={editedQuestionTitle}
-          questionOptions={flashCard.questionOptions}
-          questionAnswer={editedQuestionAnswer}
-          turn={turn}
-          buttonText={buttonText}
-          handleMarkAsNoted={handleMarkAsNoted}
-          height={height}
-          handleDeleteClick={handleDeleteClick}
-          handleEditClick={handleEditClick}
-          status={status}
-          questionTitleEl={questionTitleEl}
-          questionAnswerEl={questionAnswerEl}
-        />
-      )}
+      {showDeletedMessage ? (
+        <div className="deleted-message">Successfully Deleted!</div>
+      ) :
+        (isDeleted ? null : editMode ? (
+          <EditView
+            editedQuestionTitle={editedQuestionTitle}
+            editedQuestionAnswer={editedQuestionAnswer}
+            handleTitleChange={(e) => setEditedQuestionTitle(e.target.value)}
+            handleAnswerChange={(e) => setEditedQuestionAnswer(e.target.value)}
+            handleUpdateClick={handleUpdateClick}
+            handleGoBack={handleGoBack}
+          />
+        ) : (
+          <DisplayView
+            questionTitle={editedQuestionTitle}
+            questionOptions={flashCard.questionOptions}
+            questionAnswer={editedQuestionAnswer}
+            turn={turn}
+            buttonText={buttonText}
+            handleMarkAsNoted={handleMarkAsNoted}
+            height={height}
+            handleDeleteClick={handleDeleteClick}
+            handleEditClick={handleEditClick}
+            status={status}
+            questionTitleEl={questionTitleEl}
+            questionAnswerEl={questionAnswerEl}
+          />
+        ))}
     </div>
   );
 };

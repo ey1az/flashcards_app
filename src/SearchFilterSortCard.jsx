@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import Flashcards from "./Flashcards";
 import "./CSS/SearchFilterSortCard.css";
 
-const SearchFilterSortCard = ({ flashCards }) => {
+const SearchFilterSortCard = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedSortOption, setSelectedSortOption] = useState("default");
@@ -111,7 +111,7 @@ const SearchFilterSortCard = ({ flashCards }) => {
   };
 
   const handleShareSelected = () => {
-    const selectedCardDetails = flashCards
+    const selectedCardDetails = filteredFlashCards
       .filter((card) => selectedCards.has(card.id))
       .map(({ id, questionTitle, questionAnswer, questionOptions, questionDate, questionStatus }) => ({
         id,
