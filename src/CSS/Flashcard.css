@@ -162,3 +162,7 @@
 .card .flashcard-act button:hover {
   background-color: #1c567b;
 }
+
+.card.turn .deleted-message{
+  transform: rotateY(180deg);
+}

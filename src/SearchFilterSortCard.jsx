@@ -206,9 +206,7 @@ const SearchFilterSortCard = () => {
         throw new Error(`Failed to update target card. Server responded with ${updateTargetCardResponse.status}: ${errorText}`);
       }
     } catch (error) {
-      if (!(error instanceof TypeError)) {
       console.error('Error updating flashcards:', error.message);
-      }
     }
   };
 
@@ -249,7 +247,7 @@ const SearchFilterSortCard = () => {
       <div className="filter-opt">
         <label className="filter-opt-select">
           Filter by Status:
-          <select ref={statusSelectRef} onChange={handleStatusChange}>
+          <select id="statusFilter" ref={statusSelectRef} onChange={handleStatusChange}>
             <option value="all">All</option>
             <option value="Want to Learn">Want to Learn</option>
             <option value="Noted">Noted</option>
@@ -258,7 +256,7 @@ const SearchFilterSortCard = () => {
         </label>
         <label>
           Sort by:
-          <select onChange={handleSortChange}>
+          <select id="sortFilter" onChange={handleSortChange}>
             <option value="default">Personal Order</option>
             <option value="Date">Date</option>
             <option value="ID">ID</option>
@@ -269,6 +267,7 @@ const SearchFilterSortCard = () => {
       </div>
       <div className="search-bar">
         <input
+          id = "searchFlashcards"
           type="text"
           placeholder="Search flashcards..."
           value={searchText}
@@ -293,6 +292,7 @@ const SearchFilterSortCard = () => {
             key={flashCard.id} className="flashcard-item">
             <input
               type="checkbox"
+              id={`flashcardCheckbox-${flashCard.id}`}
               className="flashcard-checkbox"
               checked={selectedCards.has(flashCard.id)}
               onChange={() => handleCardSelect(flashCard.id)}

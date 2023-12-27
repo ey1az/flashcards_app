@@ -17,10 +17,15 @@ const CreateCard = () => {
 
   const handleAddCard = async () => {
 
-    if (!questionOptions.includes(questionAnswer)) {
-      alert("Please make sure that one of the options is equal to the answer.");
+    if (!questionTitle || !questionAnswer) {
+      alert("Please fill in all required fields: Question Title and Question Answer.");
       return;
     }
+
+    if (!questionOptions.map(option => option.toLowerCase()).includes(questionAnswer.toLowerCase())) {
+      alert("Please make sure that one of the options is equal to the answer.");
+      return;
+    }    
 
     const { questionDate } = getCurrentDateTime();
 
@@ -57,6 +62,8 @@ const CreateCard = () => {
         throw new Error(`Failed to add flashcard. Server responded with ${addNewCardResponse.status}`);
       }
 
+      window.location.reload();
+
     } catch (error) {
       console.error("Error adding flashcard:", error);
     }
@@ -77,6 +84,8 @@ const CreateCard = () => {
             Question Title:
             <input
               type="text"
+              id="questionTitle"
+              name="questionTitle"
               value={questionTitle}
               onChange={(e) => setQuestionTitle(e.target.value)}
             />
@@ -87,6 +96,8 @@ const CreateCard = () => {
               <input
                 key={index}
                 type="text"
+                id={`option-${index}`}
+                name={`option-${index}`}
                 value={option}
                 onChange={(e) => {
                   const updatedOptions = [...questionOptions];
@@ -100,6 +111,8 @@ const CreateCard = () => {
             Question Answer:
             <input
               type="text"
+              id="questionAnswer"
+              name="questionAnswer"
               value={questionAnswer}
               onChange={(e) => setQuestionAnswer(e.target.value)}
             />

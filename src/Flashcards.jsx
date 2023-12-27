@@ -65,7 +65,10 @@ const FlashCards = ({ flashCard }) => {
     const initialQuestionTitle = flashCard.questionTitle;
     const initialQuestionAnswer = flashCard.questionAnswer;
 
-    if (!flashCard.questionOptions.includes(editedQuestionAnswer)) {
+    const lowercaseOptions = flashCard.questionOptions.map((option) => option.toLowerCase());
+    const lowercaseEditedAnswer = editedQuestionAnswer.toLowerCase();
+
+    if (!lowercaseOptions.includes(lowercaseEditedAnswer)) {
       alert("Updated answer must be one of the current options!");
       setEditedQuestionTitle(initialQuestionTitle);
       setEditedQuestionAnswer(initialQuestionAnswer);
@@ -205,6 +208,7 @@ const EditView = ({
     <input
       className="updateTitle"
       type="text"
+      id="updateTitle"
       value={editedQuestionTitle}
       onChange={handleTitleChange}
       onClick={(e) => e.stopPropagation()}
@@ -212,6 +216,7 @@ const EditView = ({
     <input
       className="updateAnswer"
       type="text"
+      id="updateAnswer"
       value={editedQuestionAnswer}
       onChange={handleAnswerChange}
       onClick={(e) => e.stopPropagation()}
