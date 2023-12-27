@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Flashcards App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the Flashcards App! This application allows users to manage flashcards efficiently. It provides features like creating flashcards with a user-friendly interface, editing/updating existing flashcards, and deleting them. The app offers various statuses such as "Want to Learn," "Noted," and "Learned" that users can freely mark based on their preferences.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [Recommendations](#recommendations)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [End](#end)
 
-### `npm start`
+## Recommendations
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- For the best experience, it is recommended to use the latest version of a modern browser such as Google Chrome, Mozilla Firefox, Microsoft Edge, Safari, or Opera.
+- Ensure that your browser is updated to the latest version for optimal performance and security.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+1. **Home Page:**
+   - Overview of projects with links to detailed information.
+   
+2. **Flashcards Page:**
+   - Create, edit/update, and delete flashcards with ease.
+   - View flashcard properties such as the question, answer, and options.
+   - Assign different statuses like "Want to Learn," "Noted," and "Learned."
+   - Search, filter, and sort flashcards for better organization.
+   - Select multiple flashcards and share details via email.
+   - Drag and drop flashcards to change their positions.
+   - Infinite scrolling for seamless browsing through flashcards.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **Contact Me Page:**
+   - Enter a subject, email address, and message content.
+   - Messages are stored in a file on the JSON server.
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Before you start, make sure you have Node.js installed on your machine. To install the necessary dependencies, run:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The primary dependencies include:
+- `concurrently`: For running multiple commands concurrently.
+- `json-server`: For simulating a REST API with a JSON file.
+- `react-router-dom`: For handling navigation within the React app.
+- `react-dom`: Required for rendering React components.
 
-### `npm run eject`
+## Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+To launch the app, use the following command:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+This will start both the React app and the JSON server concurrently, allowing you to explore and interact with the Flashcards App.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## End
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Happy flashcard managing!
