@@ -180,6 +180,7 @@ const FlashCards = ({ flashCard }) => {
           <DisplayView
             questionTitle={editedQuestionTitle}
             questionOptions={flashCard.questionOptions}
+            questionDate={flashCard.questionDate}
             questionAnswer={editedQuestionAnswer}
             turn={turn}
             buttonText={buttonText}
@@ -235,6 +236,7 @@ const EditView = ({
 const DisplayView = ({
   questionTitle,
   questionOptions,
+  questionDate,
   questionAnswer,
   turn,
   buttonText,
@@ -249,6 +251,7 @@ const DisplayView = ({
   <>
     {!turn && (
       <div className="questionTitle" ref={questionTitleEl}>
+        <div className="questionDateDisplay">{questionDate}</div>
         <div>{questionTitle}</div>
         <ul className="questionOptions">
           {questionOptions.map((option, index) => (

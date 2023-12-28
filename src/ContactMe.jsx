@@ -55,15 +55,15 @@ function ContactMe() {
       <form onSubmit={handleSubmit}>
         <label>
           Subject:
-          <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required />
+          <input id="subjectEnter" type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required />
         </label>
         <label>
           Email:
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input id="emailEnter" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </label>
         <label>
           Message:
-          <textarea value={content} onChange={(e) => setContent(e.target.value)} required />
+          <textarea id="messageEnter" value={content} onChange={(e) => setContent(e.target.value)} required />
         </label>
         <button type="submit">Submit</button>
       </form>

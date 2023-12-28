@@ -166,3 +166,9 @@
 .card.turn .deleted-message{
   transform: rotateY(180deg);
 }
+
+.questionDateDisplay{
+  font-size: smaller;
+  color: #11a8bc;
+  margin-bottom: 15px;
+}
