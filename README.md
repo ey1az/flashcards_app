@@ -35,7 +35,13 @@ Welcome to the Flashcards App! This application allows users to manage flashcard
 
 ## Installation
 
-Before you start, make sure you have Node.js installed on your machine. To install the necessary dependencies, run:
+Before you start, navigate to the project directory by running the following command:
+
+```bash
+cd assignment3_wm1
+```
+
+Make sure you have Node.js installed on your machine. To install the necessary dependencies, run:
 
 ```bash
 npm install

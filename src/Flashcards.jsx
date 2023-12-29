@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./CSS/Flashcard.css";
 
-const FlashCards = ({ flashCard, updateFlashcard, handleFlashcardDelete }) => {
+const FlashCards = ({ flashCard, updateFlashcard }) => {
   const [turn, setTurn] = useState(false);
   const [height, setHeight] = useState("initial");
   const [status, setStatus] = useState(flashCard.questionStatus || "Want to Learn");
@@ -9,8 +9,6 @@ const FlashCards = ({ flashCard, updateFlashcard, handleFlashcardDelete }) => {
   const [editedQuestionTitle, setEditedQuestionTitle] = useState(flashCard.questionTitle);
   const [editedQuestionAnswer, setEditedQuestionAnswer] = useState(flashCard.questionAnswer);
   const [buttonText, setButtonText] = useState(status === "Want to Learn" ? "Mark as Noted" : "Mark as Learned");
-  const [isDeleted, setIsDeleted] = useState(false);
-  const [showDeletedMessage, setShowDeletedMessage] = useState(false);
 
   const questionTitleEl = useRef();
   const questionAnswerEl = useRef();
@@ -42,11 +40,7 @@ const FlashCards = ({ flashCard, updateFlashcard, handleFlashcardDelete }) => {
         throw new Error(`Failed to delete flashcard. Server responded with ${response.status}`);
       }
 
-      setIsDeleted(true);
-      setShowDeletedMessage(true);
-
-      updateFlashcard({ ...flashCard, isDeleted: true });
-      handleFlashcardDelete(flashCard.id);
+      window.location.reload();
     } catch (error) {
       console.error('Error deleting flashcard:', error);
     }
@@ -110,11 +104,12 @@ const FlashCards = ({ flashCard, updateFlashcard, handleFlashcardDelete }) => {
         questionTitle: editedQuestionTitle,
         questionAnswer: editedQuestionAnswer,
         questionDate: currentDate,
-        questionStatus: "Want to Learn",
       };
 
+      setStatus("Want to Learn");
+      setButtonText("Mark as Noted");
+
       updateFlashcard(updatedCard);
-      
     } catch (error) {
       console.error('Error editing flashcard:', error);
     }
@@ -176,37 +171,34 @@ const FlashCards = ({ flashCard, updateFlashcard, handleFlashcardDelete }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {showDeletedMessage ? (
-        <div className="deleted-message">Successfully Deleted!</div>
-      ) :
-        (isDeleted ? null : editMode ? (
-          <EditView
-            editedQuestionTitle={editedQuestionTitle}
-            editedQuestionAnswer={editedQuestionAnswer}
-            handleTitleChange={(e) => setEditedQuestionTitle(e.target.value)}
-            handleAnswerChange={(e) => setEditedQuestionAnswer(e.target.value)}
-            handleUpdateClick={handleUpdateClick}
-            handleGoBack={handleGoBack}
-          />
-        ) : (
-          <DisplayView
-            questionTitle={editedQuestionTitle}
-            questionOptions={flashCard.questionOptions}
-            questionDate={flashCard.questionDate}
-            questionAnswer={editedQuestionAnswer}
-            turn={turn}
-            buttonText={buttonText}
-            handleMarkAsNoted={handleMarkAsNoted}
-            height={height}
-            handleDeleteClick={handleDeleteClick}
-            handleEditClick={handleEditClick}
-            status={status}
-            questionTitleEl={questionTitleEl}
-            questionAnswerEl={questionAnswerEl}
-          />
-        ))}
+      {!editMode ? (
+        <DisplayView
+          questionTitle={editedQuestionTitle}
+          questionOptions={flashCard.questionOptions}
+          questionDate={flashCard.questionDate}
+          questionAnswer={editedQuestionAnswer}
+          turn={turn}
+          buttonText={buttonText}
+          handleMarkAsNoted={handleMarkAsNoted}
+          height={height}
+          handleDeleteClick={handleDeleteClick}
+          handleEditClick={handleEditClick}
+          status={status}
+          questionTitleEl={questionTitleEl}
+          questionAnswerEl={questionAnswerEl}
+        />
+      ) : (
+        <EditView
+          editedQuestionTitle={editedQuestionTitle}
+          editedQuestionAnswer={editedQuestionAnswer}
+          handleTitleChange={(e) => setEditedQuestionTitle(e.target.value)}
+          handleAnswerChange={(e) => setEditedQuestionAnswer(e.target.value)}
+          handleUpdateClick={handleUpdateClick}
+          handleGoBack={handleGoBack}
+        />
+      )}
     </div>
-  );
+  );  
 };
 
 const EditView = ({

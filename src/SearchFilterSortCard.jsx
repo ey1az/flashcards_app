@@ -250,14 +250,6 @@ const SearchFilterSortCard = () => {
     );
   };
 
-  const handleFlashcardDelete = (deletedCardId) => {
-    setSelectedCards((prevSelected) => {
-      const newSelected = new Set(prevSelected);
-      newSelected.delete(deletedCardId);
-      return newSelected;
-    });
-  };
-
   return (
     <div>
       <div className="filter-opt">
@@ -306,19 +298,16 @@ const SearchFilterSortCard = () => {
             onDragOver={(e) => dragOverHandler(e)}
             onDrop={(e) => dropHandler(e, flashCard)}
             key={flashCard.id} className="flashcard-item">
-            {!flashCard.isDeleted && (
-              <input
-                type="checkbox"
-                id={`flashcardCheckbox-${flashCard.id}`}
-                className="flashcard-checkbox"
-                checked={selectedCards.has(flashCard.id)}
-                onChange={() => handleCardSelect(flashCard.id)}
-              />
-            )}
+            <input
+              type="checkbox"
+              id={`flashcardCheckbox-${flashCard.id}`}
+              className="flashcard-checkbox"
+              checked={selectedCards.has(flashCard.id)}
+              onChange={() => handleCardSelect(flashCard.id)}
+            />
             <Flashcards
               flashCard={flashCard}
               updateFlashcard={updateFlashcard}
-              handleFlashcardDelete={handleFlashcardDelete}
             />
           </div>
         ))}
