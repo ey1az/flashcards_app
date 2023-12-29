@@ -53,7 +53,7 @@ const SearchFilterSortCard = () => {
       setSelectedStatus("all");
 
       setLoadMore(true);
-      
+
       statusSelectRef.current.value = "all";
 
       const response = await fetch(
@@ -242,6 +242,22 @@ const SearchFilterSortCard = () => {
     setCurrentCard(null);
   }
 
+  const updateFlashcard = (updatedCard) => {
+    setVisibleFlashcards((prevVisible) =>
+      prevVisible.map((prevCard) =>
+        prevCard.id === updatedCard.id ? updatedCard : prevCard
+      )
+    );
+  };
+
+  const handleFlashcardDelete = (deletedCardId) => {
+    setSelectedCards((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      newSelected.delete(deletedCardId);
+      return newSelected;
+    });
+  };
+
   return (
     <div>
       <div className="filter-opt">
@@ -267,7 +283,7 @@ const SearchFilterSortCard = () => {
       </div>
       <div className="search-bar">
         <input
-          id = "searchFlashcards"
+          id="searchFlashcards"
           type="text"
           placeholder="Search flashcards..."
           value={searchText}
@@ -290,15 +306,19 @@ const SearchFilterSortCard = () => {
             onDragOver={(e) => dragOverHandler(e)}
             onDrop={(e) => dropHandler(e, flashCard)}
             key={flashCard.id} className="flashcard-item">
-            <input
-              type="checkbox"
-              id={`flashcardCheckbox-${flashCard.id}`}
-              className="flashcard-checkbox"
-              checked={selectedCards.has(flashCard.id)}
-              onChange={() => handleCardSelect(flashCard.id)}
-            />
+            {!flashCard.isDeleted && (
+              <input
+                type="checkbox"
+                id={`flashcardCheckbox-${flashCard.id}`}
+                className="flashcard-checkbox"
+                checked={selectedCards.has(flashCard.id)}
+                onChange={() => handleCardSelect(flashCard.id)}
+              />
+            )}
             <Flashcards
               flashCard={flashCard}
+              updateFlashcard={updateFlashcard}
+              handleFlashcardDelete={handleFlashcardDelete}
             />
           </div>
         ))}

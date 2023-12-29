@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./CSS/Flashcard.css";
 
-const FlashCards = ({ flashCard }) => {
+const FlashCards = ({ flashCard, updateFlashcard, handleFlashcardDelete }) => {
   const [turn, setTurn] = useState(false);
   const [height, setHeight] = useState("initial");
   const [status, setStatus] = useState(flashCard.questionStatus || "Want to Learn");
@@ -45,6 +45,8 @@ const FlashCards = ({ flashCard }) => {
       setIsDeleted(true);
       setShowDeletedMessage(true);
 
+      updateFlashcard({ ...flashCard, isDeleted: true });
+      handleFlashcardDelete(flashCard.id);
     } catch (error) {
       console.error('Error deleting flashcard:', error);
     }
@@ -103,6 +105,16 @@ const FlashCards = ({ flashCard }) => {
         throw new Error(`Failed to edit flashcard. Server responded with ${response.status}`);
       }
 
+      const updatedCard = {
+        ...flashCard,
+        questionTitle: editedQuestionTitle,
+        questionAnswer: editedQuestionAnswer,
+        questionDate: currentDate,
+        questionStatus: "Want to Learn",
+      };
+
+      updateFlashcard(updatedCard);
+      
     } catch (error) {
       console.error('Error editing flashcard:', error);
     }
