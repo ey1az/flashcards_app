@@ -118,6 +118,8 @@ const FlashCards = ({ flashCard, updateFlashcard }) => {
   const handleGoBack = () => {
     setEditMode(false);
     setTurn(!turn);
+    setEditedQuestionTitle(flashCard.questionTitle);
+    setEditedQuestionAnswer(flashCard.questionAnswer);
   };
 
   const handleMarkAsNoted = async (e) => {
