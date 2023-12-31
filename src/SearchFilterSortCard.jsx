@@ -67,8 +67,6 @@ const SearchFilterSortCard = () => {
       const newFlashcards = await response.json();
 
       if (newFlashcards.length > 0) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
         setVisibleFlashcards((prevVisible) => [...prevVisible, ...newFlashcards]);
         setCurrentPage((prevPage) => prevPage + 1);
       } else {
