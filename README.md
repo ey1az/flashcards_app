@@ -4,11 +4,18 @@ Welcome to the Flashcards App! This application allows users to manage flashcard
 
 ## Table of Contents
 
+- [GitHub Page](#githubpage)
 - [Recommendations](#recommendations)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
 - [End](#end)
+
+## GitHub Page
+
+```bash
+https://ey1az.github.io/assignment3_wm1/
+```
 
 ## Recommendations
 
@@ -27,7 +34,6 @@ Welcome to the Flashcards App! This application allows users to manage flashcard
    - Search, filter, and sort flashcards for better organization.
    - Select multiple flashcards and share details via email.
    - Drag and drop flashcards to change their positions.
-   - Infinite scrolling for seamless browsing through flashcards.
 
 3. **Contact Me Page:**
    - Enter a subject, email address, and message content.
