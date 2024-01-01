@@ -24,7 +24,7 @@ function ContactMe() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     try {
       const response = await fetch("http://localhost:3002/messages", {
         method: "POST",

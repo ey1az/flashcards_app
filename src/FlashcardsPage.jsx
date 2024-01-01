@@ -70,7 +70,7 @@ const FlashcardsPage = () => {
     const fetchAllFlashcards = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3002/flashCards?_sort=questionDate&_order=desc`
+          `http://localhost:3002/flashCards`
         );
 
         if (!response.ok) {

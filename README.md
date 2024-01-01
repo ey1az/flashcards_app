@@ -15,9 +15,7 @@ Welcome to the Flashcards App! This application allows users to manage flashcard
 
 Click on the link below to access the website through GitHub Pages:
 
-```bash
-https://ey1az.github.io/assignment3_wm1/
-```
+<https://ey1az.github.io/assignment3_wm1/>
 
 ## Recommendations
 
