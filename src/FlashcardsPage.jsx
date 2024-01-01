@@ -169,7 +169,7 @@ const FlashcardsPage = () => {
       return;
     }
 
-    const updatedFlashcards = filteredFlashCards.map((c) => {
+    const updatedFlashcards = visibleFlashcards.map((c) => {
       if (c.id === targetCard.id) {
         return { ...c, questionOrder: currentCard.questionOrder };
       }
