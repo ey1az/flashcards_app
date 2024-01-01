@@ -1,20 +1,15 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Flashcards from "./Flashcards";
-import "./CSS/SearchFilterSortCard.css";
+import CreateCard from "./CreateCard";
+import "./CSS/FlashcardsPage.css";
 
-const SearchFilterSortCard = () => {
+const FlashcardsPage = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedSortOption, setSelectedSortOption] = useState("default");
   const [visibleFlashcards, setVisibleFlashcards] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [loadMore, setLoadMore] = useState(false);
-  const [noMoreFlashcards, setNoMoreFlashcards] = useState(false);
   const [selectedCards, setSelectedCards] = useState(new Set());
   const [currentCard, setCurrentCard] = useState(null);
-  const cardsPerPage = 9;
-
-  const statusSelectRef = useRef(null);
 
   const handleStatusChange = (e) => {
     const status = e.target.value;
@@ -37,64 +32,9 @@ const SearchFilterSortCard = () => {
       case "Date":
         return (f1, f2) => new Date(f2.questionDate) - new Date(f1.questionDate);
       default:
-        return (f1, f2) => {
-          if (f1.questionOrder > f2.questionOrder) {
-            return 1;
-          } else {
-            return -1;
-          }
-        };
+        return (f1, f2) => f1.questionOrder - f2.questionOrder;
     }
   };
-
-  const handleLoadMore = useCallback(async () => {
-    try {
-      setSearchText("");
-      setSelectedStatus("all");
-
-      setLoadMore(true);
-
-      statusSelectRef.current.value = "all";
-
-      const response = await fetch(
-        `http://localhost:3002/flashCards?_page=${currentPage + 1}&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Failed to load more flashcards. Server responded with ${response.status}`);
-      }
-
-      const newFlashcards = await response.json();
-
-      if (newFlashcards.length > 0) {
-        setVisibleFlashcards((prevVisible) => [...prevVisible, ...newFlashcards]);
-        setCurrentPage((prevPage) => prevPage + 1);
-      } else {
-        setNoMoreFlashcards(true);
-      }
-    } catch (error) {
-      console.error("Error loading more flashcards:", error);
-    }
-    finally {
-      setLoadMore(false);
-    }
-  }, [currentPage, cardsPerPage]);
-
-  const handleScroll = useCallback(() => {
-    const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
-
-    if (!loadMore && !noMoreFlashcards && scrollHeight - scrollTop <= clientHeight + 1) {
-      handleLoadMore();
-    }
-  }, [handleLoadMore, loadMore, noMoreFlashcards]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
 
   const handleCardSelect = (cardId) => {
     setSelectedCards((prevSelected) => {
@@ -127,25 +67,25 @@ const SearchFilterSortCard = () => {
   };
 
   useEffect(() => {
-    const fetchInitialFlashcards = async () => {
+    const fetchAllFlashcards = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3002/flashCards?_page=1&_limit=${cardsPerPage}&_sort=questionDate&_order=desc`
+          `http://localhost:3002/flashCards?_sort=questionDate&_order=desc`
         );
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch initial flashcards. Server responded with ${response.status}`);
+          throw new Error(`Failed to fetch flashcards. Server responded with ${response.status}`);
         }
 
-        const initialFlashcards = await response.json();
-        setVisibleFlashcards(initialFlashcards);
+        const allFlashcards = await response.json();
+        setVisibleFlashcards(allFlashcards);
       } catch (error) {
-        console.error("Error fetching initial flashcards:", error);
+        console.error("Error fetching flashcards:", error);
       }
     };
 
-    fetchInitialFlashcards();
-  }, [cardsPerPage]);
+    fetchAllFlashcards();
+  }, []);
 
   const filteredFlashCards = visibleFlashcards
     .filter((flashCard) => {
@@ -209,6 +149,11 @@ const SearchFilterSortCard = () => {
   };
 
   function dragStartHandler(flashCard) {
+    if (selectedSortOption !== "default") {
+      alert("Sort by Personal Order to rearrange cards by dragging and dropping.");
+      return;
+    }
+
     setCurrentCard(flashCard);
   }
 
@@ -248,12 +193,23 @@ const SearchFilterSortCard = () => {
     );
   };
 
+  const handleDeleteCard = (deletedCardId) => {
+    setVisibleFlashcards((prevVisible) => prevVisible.filter((card) => card.id !== deletedCardId));
+  };
+
+  const handleCardAdded = (newCard) => {
+    setVisibleFlashcards((prevVisible) => [...prevVisible, newCard]);
+  };
+
   return (
     <div>
+      <CreateCard
+        onCardAdded={handleCardAdded}
+      />
       <div className="filter-opt">
         <label className="filter-opt-select">
           Filter by Status:
-          <select id="statusFilter" ref={statusSelectRef} onChange={handleStatusChange}>
+          <select id="statusFilter" onChange={handleStatusChange}>
             <option value="all">All</option>
             <option value="Want to Learn">Want to Learn</option>
             <option value="Noted">Noted</option>
@@ -285,9 +241,6 @@ const SearchFilterSortCard = () => {
           <button onClick={handleShareSelected}>Share Selected</button>
         )}
       </div>
-      <div className="flashListText">
-        <p>List of Flashcards</p>
-      </div>
       <div className="card-cont">
         {filteredFlashCards.map((flashCard) => (
           <div
@@ -304,19 +257,16 @@ const SearchFilterSortCard = () => {
               onChange={() => handleCardSelect(flashCard.id)}
             />
             <Flashcards
+              key={flashCard.id}
               flashCard={flashCard}
               updateFlashcard={updateFlashcard}
+              handleDeleteCard={handleDeleteCard}
             />
           </div>
         ))}
       </div>
-      {loadMore && !noMoreFlashcards && (
-        <div>
-          <p className="loading-text"> Flashcards are loading... </p>
-        </div>
-      )}
     </div>
   );
 };
 
-export default SearchFilterSortCard;
+export default FlashcardsPage;

@@ -18,11 +18,11 @@ label {
     font-weight: bold;
 }
 
-h2{
+h2 {
     text-align: center;
 }
 
-.messages-list-comp{
+.messages-list-comp {
     list-style: none;
     margin-bottom: 15px;
 }
@@ -37,7 +37,7 @@ h2{
     resize: none;
 }
 
-.contact-me-cont textarea{
+.contact-me-cont textarea {
     height: 125px;
 }
 

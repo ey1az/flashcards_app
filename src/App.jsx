@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import HomePage from "./HomePage";
-import FlashcardList from "./FlashcardList";
+import FlashcardsPage from "./FlashcardsPage";
 import ContactMe from "./ContactMe";
 
 import "./CSS/App.css";
 
-const App = ({ flashCards }) => {
+const App = () => {
   return (
     <Router>
       <div className="App">
@@ -29,7 +29,7 @@ const App = ({ flashCards }) => {
           <Route path="/home-page" element={<HomePage />} />
           <Route
             path="/flashcards-page"
-            element={<FlashcardList flashCards={flashCards} />}
+            element={<FlashcardsPage />}
           />
           <Route path="/contact-me-page" element={<ContactMe />} />
         </Routes>

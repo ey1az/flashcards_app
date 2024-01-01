@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./CSS/CreateCard.css";
 
-const CreateCard = () => {
+const CreateCard = ({ onCardAdded }) => {
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionOptions, setQuestionOptions] = useState(["", "", "", ""]);
   const [questionAnswer, setQuestionAnswer] = useState("");
@@ -25,7 +25,7 @@ const CreateCard = () => {
     if (!questionOptions.map(option => option.toLowerCase()).includes(questionAnswer.toLowerCase())) {
       alert("Please make sure that one of the options is equal to the answer.");
       return;
-    }    
+    }
 
     const { questionDate } = getCurrentDateTime();
 
@@ -42,6 +42,7 @@ const CreateCard = () => {
       }, 0);
 
       const newCard = {
+        id: flashCards.length + 1,
         questionTitle,
         questionOptions,
         questionAnswer,
@@ -62,7 +63,7 @@ const CreateCard = () => {
         throw new Error(`Failed to add flashcard. Server responded with ${addNewCardResponse.status}`);
       }
 
-      window.location.reload();
+      onCardAdded(newCard);
 
     } catch (error) {
       console.error("Error adding flashcard:", error);

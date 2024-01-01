@@ -19,7 +19,7 @@
     font-weight: bold;
 }
 
-.add-card h3{
+.add-card h3 {
     text-align: center;
 }
 
@@ -34,11 +34,11 @@
     resize: none;
 }
 
-.contact-me-cont textarea{
+.contact-me-cont textarea {
     height: 125px;
 }
 
-.add-card .add-card-btn{
+.add-card .add-card-btn {
     margin-top: 13px;
     padding: 10px;
     background-color: orange;

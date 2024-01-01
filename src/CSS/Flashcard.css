@@ -163,11 +163,11 @@
   background-color: #1c567b;
 }
 
-.card.turn .deleted-message{
+.card.turn .deleted-message {
   transform: rotateY(180deg);
 }
 
-.questionDateDisplay{
+.questionDateDisplay {
   font-size: smaller;
   color: #11a8bc;
   margin-bottom: 15px;

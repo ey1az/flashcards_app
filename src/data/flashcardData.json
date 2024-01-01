@@ -433,20 +433,6 @@
       "questionAnswer": "Baku",
       "questionDate": "12/16/2023, 09:00:31 PM",
       "questionStatus": "Learned"
-    },
-    {
-      "id": 32,
-      "questionOrder": 2,
-      "questionTitle": "Last FL43",
-      "questionOptions": [
-        "1",
-        "2",
-        "3",
-        "4"
-      ],
-      "questionAnswer": "3",
-      "questionDate": "12/26/2023, 12:40:03 PM",
-      "questionStatus": "Learned"
     }
   ],
   "messages": [

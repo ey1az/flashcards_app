@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./CSS/Flashcard.css";
 
-const FlashCards = ({ flashCard, updateFlashcard }) => {
+const FlashCards = ({ flashCard, updateFlashcard, handleDeleteCard }) => {
   const [turn, setTurn] = useState(false);
   const [height, setHeight] = useState("initial");
   const [status, setStatus] = useState(flashCard.questionStatus || "Want to Learn");
@@ -40,7 +40,7 @@ const FlashCards = ({ flashCard, updateFlashcard }) => {
         throw new Error(`Failed to delete flashcard. Server responded with ${response.status}`);
       }
 
-      window.location.reload();
+      handleDeleteCard(flashCard.id);
     } catch (error) {
       console.error('Error deleting flashcard:', error);
     }
@@ -200,7 +200,7 @@ const FlashCards = ({ flashCard, updateFlashcard }) => {
         />
       )}
     </div>
-  );  
+  );
 };
 
 const EditView = ({
