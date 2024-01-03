@@ -41,6 +41,12 @@ Click on the link below to access the website through GitHub Pages:
 
 ## Installation
 
+Clone the repository:
+
+```bash
+git clone https://github.com/ey1az/assignment3_wm1.git
+```
+
 Before you start, navigate to the project directory by running the following command:
 
 ```bash
