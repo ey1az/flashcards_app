@@ -15,7 +15,7 @@ Welcome to the Flashcards App! This application allows users to manage flashcard
 
 Click on the link below to access the website through GitHub Pages:
 
-<https://ey1az.github.io/assignment3_wm1/>
+<https://ey1az.github.io/flashcards_app/>
 
 ## Recommendations
 
@@ -44,13 +44,13 @@ Click on the link below to access the website through GitHub Pages:
 Clone the repository:
 
 ```bash
-git clone https://github.com/ey1az/assignment3_wm1.git
+git clone https://github.com/ey1az/flashcards_app.git
 ```
 
 Before you start, navigate to the project directory by running the following command:
 
 ```bash
-cd assignment3_wm1
+cd flashcards_app
 ```
 
 Make sure you have Node.js installed on your machine. To install the necessary dependencies, run:
